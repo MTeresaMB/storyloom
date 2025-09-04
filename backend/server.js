@@ -13,6 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 const charactersRoutes = require('./routes/characters');
+const locationsRoutes = require('./routes/locations');
+const objectsRoutes = require('./routes/objects');
 
 // Ruta de prueba
 app.get('/', (req, res) => {
@@ -24,6 +26,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/characters', charactersRoutes);
+app.use('/api/locations', locationsRoutes);
+app.use('/api/objects', objectsRoutes);
 
 // Iniciar servidor
 app.listen(PORT, () => {
