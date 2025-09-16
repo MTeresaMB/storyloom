@@ -1,4 +1,5 @@
 import { Edit3, Save, Target, Clock, MoreHorizontal } from 'lucide-react'
+import { formatDateTime } from '../../utils/dates'
 
 type Props = {
   title: string
@@ -20,7 +21,7 @@ export default function EditorHeader({
           <h1 className="text-xl font-semibold text-white mb-1">{title}</h1>
           <div className="flex items-center gap-4 text-sm text-gray-400">
             <span className="flex items-center gap-1"><Target className="h-3 w-3" />{wordCount} words</span>
-            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{lastModified}</span>
+            <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{formatDateTime(lastModified)}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">

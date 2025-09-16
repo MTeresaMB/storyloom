@@ -1,105 +1,143 @@
-import { useState } from "react";
-import { Character } from "../../types/character";
+import { Character, CharacterFormData } from "../../types/character";
+import Button from "../ui/Button";
+import useCharacterForm from "../../hooks/characters/usecharacterForm";
+import { validateForm } from "../../utils/characterValidation";
 
 interface CharacterFormProps {
-  onCharacterCreated: (character: Character) => void;
+  onCharacterCreated: (character: CharacterFormData) => Promise<void>;
+  onCancel?: () => void;
+  initialData?: Partial<Character>;
 }
 
-export default function CharacterForm({ onCharacterCreated }: CharacterFormProps) {
-  const [formData, setFormData] = useState<Character>({
-    id: '',
-    name: '',
-    description: '',
-    age: 0,
-    appearance: '',
-    personality: '',
-    background: '',
-    goals: '',
-    conflicts: '',
-    user_id: '',
-    created_at: '',
-    updated_at: '',
-  })
-
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+export default function CharacterForm({ onCharacterCreated, onCancel, initialData }: CharacterFormProps) {
+  const { formData, errors, loading, setLoading, updateField, touchField, resetForm, isEditing, canSubmit } = useCharacterForm(initialData);
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validateForm(formData)) return;
     setLoading(true);
-
     try {
-      const response = await fetch('/api/characters', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-user-id': 'dac6f4fa-6baf-4966-8d3c-597c1f3afa5e' //temporal
-        },
-        body: JSON.stringify({...formData, age: formData.age ? formData.age : undefined})
-      })
-
-      if(response.ok) {
-        const newCharacter = await response.json();
-        onCharacterCreated(newCharacter);
-        setFormData({
-          id: '',
-          name: '',
-          description: '',
-          age: 0,
-          appearance: '',
-          personality: '',
-          background: '',
-          goals: '',
-          conflicts: '',
-          user_id: '',
-          created_at: '',
-          updated_at: '',
-        })
-      }
+      await onCharacterCreated(formData);
+      if (!isEditing) resetForm();
     } catch (error) {
       console.error('Error creating character:', error);
     } finally {
       setLoading(false);
     }
-  }
-
-  if (loading) return <div>Creando personaje...</div>
+  };
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
-    <h3>Crear Nuevo Personaje</h3>
-    
-    <div style={{ marginBottom: 10 }}>
-      <label>Nombre *</label>
-      <input
-        type="text"
-        value={formData.name}
-        onChange={(e) => setFormData({...formData, name: e.target.value})}
-        required
-        style={{ width: '100%', padding: 8 }}
-      />
-    </div>
+    <div className="bg-white rounded-lg shadow--sm border border-gray-200 p-6">
+      <h3 className="text-lg font-semibold text-gray-900 mb-4">{isEditing ? 'Edit Character' : 'New Character'}</h3>
+      <form onSubmit={handleSubmit} className="space-y-4">
 
-    <div style={{ marginBottom: 10 }}>
-      <label>Descripción</label>
-      <textarea
-        value={formData.description}
-        onChange={(e) => setFormData({...formData, description: e.target.value})}
-        style={{ width: '100%', padding: 8, height: 60 }}
-      />
-    </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+          <input
+            required 
+            type="text" 
+            value={formData.name} 
+            onChange={(e) => updateField('name', e.target.value)} 
+            onBlur={() => touchField('name')} 
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} />
+          {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+        </div>
 
-    <div style={{ marginBottom: 10 }}>
-      <label>Edad</label>
-      <input
-        type="number"
-        value={formData.age}
-        onChange={(e) => setFormData({ ...formData, age: Number(e.target.value) })}
-        style={{ width: '100%', padding: 8 }}
-      />
-    </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+          <textarea
+            required
+            value={formData.description}
+            onChange={(e) => updateField('description', e.target.value)}
+            onBlur={() => touchField('description')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+          </textarea>
+        </div>
 
-    <button type="submit" disabled={loading} style={{ padding: 10, backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: 4 }}>
-      {loading ? 'Creando...' : 'Crear Personaje'}
-    </button>
-  </form>  )
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Age</label>
+          <input
+            type="number"
+            value={formData.age}
+            onChange={(e) => updateField('age', e.target.value)}
+            onBlur={() => touchField('age')}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.age ? 'border-red-500' : 'border-gray-300'}`}
+          />
+          {errors.age && <p className="text-red-500 text-sm mt-1">{errors.age}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Appearance</label>
+          <textarea
+            value={formData.appearance}
+            onChange={(e) => updateField('appearance', e.target.value)}
+            onBlur={() => touchField('appearance')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.appearance ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.appearance && <p className="text-red-500 text-sm mt-1">{errors.appearance}</p>}
+          </textarea>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Personality</label>
+          <textarea
+            value={formData.personality}
+            onChange={(e) => updateField('personality', e.target.value)}
+            onBlur={() => touchField('personality')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.personality ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.personality && <p className="text-red-500 text-sm mt-1">{errors.personality}</p>}
+          </textarea>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Background</label>
+          <textarea
+            value={formData.background}
+            onChange={(e) => updateField('background', e.target.value)}
+            onBlur={() => touchField('background')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.background ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.background && <p className="text-red-500 text-sm mt-1">{errors.background}</p>}
+          </textarea>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Goals</label>
+          <textarea
+            value={formData.goals}
+            onChange={(e) => updateField('goals', e.target.value)}
+            onBlur={() => touchField('goals')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.goals ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.goals && <p className="text-red-500 text-sm mt-1">{errors.goals}</p>}
+          </textarea>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Conflicts</label>
+          <textarea
+            value={formData.conflicts}
+            onChange={(e) => updateField('conflicts', e.target.value)}
+            onBlur={() => touchField('conflicts')}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.conflicts ? 'border-red-500' : 'border-gray-300'}"
+          >
+            {errors.conflicts && <p className="text-red-500 text-sm mt-1">{errors.conflicts}</p>}
+          </textarea>
+        </div>
+
+        <div className="flex gap-2 pt-4">
+          <Button type="submit" variant="primary" disabled={!canSubmit} className="flex-1">
+            {loading ? 'Saving...' : isEditing ? 'Update Character' : 'Create Character'}
+          </Button>
+          {onCancel && (
+            <Button type="button" variant="secondary" onClick={onCancel} className="flex-1">
+              Cancel
+            </Button>
+          )}
+        </div>
+      </form>
+    </div>
+  )
 }

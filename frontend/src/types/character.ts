@@ -12,3 +12,14 @@ export interface Character {
   created_at: string
   updated_at: string
 }
+
+export interface CharacterFormData {
+  name: string;
+  description: string;
+  age: number;
+  appearance: string;
+  personality: string;
+  background: string;
+  goals: string;
+  conflicts: string;
+}

@@ -1,5 +1,6 @@
 import { Plus } from 'lucide-react'
 import { Chapter } from '../../types/chapter'
+import { formatDateTime } from '../../utils/dates'
 
 type Props = {
   chapters: Chapter[]
@@ -36,7 +37,7 @@ export default function ChapterList({ chapters, selectedId, onSelect, onAdd }: P
               <div className="font-medium text-sm mb-1">{ch.title}</div>
               <div className="text-xs opacity-75 flex justify-between">
                 <span>{ch.wordCount} words</span>
-                <span>{ch.lastModified}</span>
+                <span>{formatDateTime(ch.lastModified)}</span>
               </div>
             </button>
           )

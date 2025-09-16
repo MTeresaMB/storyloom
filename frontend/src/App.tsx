@@ -23,7 +23,7 @@ function Shell() {
   return (
     <div className="flex">
       <Sidebar activeView={activeView} setActiveView={setActiveView} />
-      <main className="flex-1 min-h-screen bg-gray-50 p-6">
+      <main className={`flex-1 min-h-screen bg-gray-50 ${activeView === 'story' ? '' : 'p-6'}`}>
         <Views activeView={activeView} />
       </main>
     </div>

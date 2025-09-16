@@ -4,13 +4,13 @@ import EditorHeader from '../components/story/EditorHeader'
 import EditorPane from '../components/story/EditorPane'
 import RightPanel from '../components/story/RightPanel'
 import { useApp } from '../context/AppContext'
-import { useChapters } from '../hooks/useChapters'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import ErrorAlert from '../components/ui/ErrorAlert'
+import { useChapters } from '../hooks/chapters/useChapters'
 
 export default function StoryView() {
   const { currentProject } = useApp()
-  const { chapters, loading, error, createChapter, updateChapter } = useChapters()
+  const { chapters, loading, error, createChapter, updateChapter, removeChapter } = useChapters()
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [rightOpen, setRightOpen] = useState(true)
