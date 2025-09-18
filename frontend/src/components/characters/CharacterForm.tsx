@@ -33,11 +33,11 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
           <input
-            required 
-            type="text" 
-            value={formData.name} 
-            onChange={(e) => updateField('name', e.target.value)} 
-            onBlur={() => touchField('name')} 
+            required
+            type="text"
+            value={formData.name}
+            onChange={(e) => updateField('name', e.target.value)}
+            onBlur={() => touchField('name')}
             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.name ? 'border-red-500' : 'border-gray-300'}`} />
           {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
         </div>
@@ -45,14 +45,13 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
           <textarea
-            required
             value={formData.description}
             onChange={(e) => updateField('description', e.target.value)}
             onBlur={() => touchField('description')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
         </div>
 
         <div>
@@ -73,10 +72,10 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
             value={formData.appearance}
             onChange={(e) => updateField('appearance', e.target.value)}
             onBlur={() => touchField('appearance')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.appearance ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.appearance && <p className="text-red-500 text-sm mt-1">{errors.appearance}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.appearance ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.appearance && <p className="text-red-500 text-sm mt-1">{errors.appearance}</p>}
         </div>
 
         <div>
@@ -85,10 +84,10 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
             value={formData.personality}
             onChange={(e) => updateField('personality', e.target.value)}
             onBlur={() => touchField('personality')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.personality ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.personality && <p className="text-red-500 text-sm mt-1">{errors.personality}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.personality ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.personality && <p className="text-red-500 text-sm mt-1">{errors.personality}</p>}
         </div>
 
         <div>
@@ -97,10 +96,10 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
             value={formData.background}
             onChange={(e) => updateField('background', e.target.value)}
             onBlur={() => touchField('background')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.background ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.background && <p className="text-red-500 text-sm mt-1">{errors.background}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.background ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.background && <p className="text-red-500 text-sm mt-1">{errors.background}</p>}
         </div>
 
         <div>
@@ -109,10 +108,10 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
             value={formData.goals}
             onChange={(e) => updateField('goals', e.target.value)}
             onBlur={() => touchField('goals')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.goals ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.goals && <p className="text-red-500 text-sm mt-1">{errors.goals}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.goals ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.goals && <p className="text-red-500 text-sm mt-1">{errors.goals}</p>}
         </div>
 
         <div>
@@ -121,10 +120,10 @@ export default function CharacterForm({ onCharacterCreated, onCancel, initialDat
             value={formData.conflicts}
             onChange={(e) => updateField('conflicts', e.target.value)}
             onBlur={() => touchField('conflicts')}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.conflicts ? 'border-red-500' : 'border-gray-300'}"
-          >
-            {errors.conflicts && <p className="text-red-500 text-sm mt-1">{errors.conflicts}</p>}
-          </textarea>
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.conflicts ? 'border-red-500' : 'border-gray-300'}`}
+            rows={3}
+          />
+          {errors.conflicts && <p className="text-red-500 text-sm mt-1">{errors.conflicts}</p>}
         </div>
 
         <div className="flex gap-2 pt-4">

@@ -7,14 +7,14 @@ import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorAlert from '../components/ui/ErrorAlert';
 import Button from '../components/ui/Button';
 import { useCharacters } from '../hooks/characters/useCharacters';
-import type { Character } from '../types/character';
+import type { Character, CharacterFormData } from '../types/character';
 
 export default function CharactersView() {
   const { characters, loading, error, createCharacter, updateCharacter, deleteCharacter } = useCharacters();
   const [showForm, setShowForm] = useState(false);
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
-  const handleCreateCharacter = async (characterData: Omit<Character, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreateCharacter = async (characterData: CharacterFormData) => {
     try {
       await createCharacter(characterData);
       setShowForm(false);
@@ -66,6 +66,13 @@ export default function CharactersView() {
             <CharacterForm
               onCharacterCreated={handleCreateCharacter}
               onCancel={() => setShowForm(false)}
+            />
+          )}
+          {editingCharacter && (
+            <CharacterForm
+              initialData={editingCharacter}
+              onCharacterCreated={(data) => handleEditCharacter(editingCharacter.id, data)}
+              onCancel={() => setEditingCharacter(null)}
             />
           )}
         </div>

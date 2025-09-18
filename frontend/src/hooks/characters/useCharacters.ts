@@ -1,32 +1,25 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { apiGet, apiPost, apiPut, apiDelete } from '../../api/client'
-import type { Character } from '../../types/character'
+import type { Character, CharacterFormData } from '../../types/character'
+import { getAuthHeader } from '../../api/token'
 
-const USER_ID = 'dac6f4fa-6baf-4966-8d3c-597c1f3afa5e' // Temporal
 
 export function useCharacters() {
   const [characters, setCharacters] = useState<Character[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const didFetch = useRef(false)
-  const inFlight = useRef<AbortController | null>(null)
 
   const fetchCharacters = useCallback(async () => {
-    if (inFlight.current) inFlight.current.abort()
-    const ctrl = new AbortController()
-    inFlight.current = ctrl
     try {
       setError(null)
-      const data = await apiGet<Character[]>('/api/characters', {
-        headers: { 'x-user-id': USER_ID },
-        signal: ctrl.signal
-      })
+      const headers = await getAuthHeader()
+      const data = await apiGet<Character[]>('/api/characters', { headers })
       setCharacters(data)
     } catch (e: any) {
-      if (e?.name !== 'AbortError') setError(e?.message ?? 'Error')
+      setError(e?.message ?? 'Error')
     } finally {
       setLoading(false)
-      inFlight.current = null
     }
   }, [])
 
@@ -34,15 +27,13 @@ export function useCharacters() {
     if (didFetch.current) return
     didFetch.current = true
     fetchCharacters()
-    return () => inFlight.current?.abort()
   }, [fetchCharacters])
 
-  const createCharacter = useCallback(async (characterData: Omit<Character, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const createCharacter = useCallback(async (characterData: CharacterFormData) => {
     try {
       setError(null)
-      const newCharacter = await apiPost<Character>('/api/characters', characterData, {
-        headers: { 'x-user-id': USER_ID }
-      })
+      const headers = await getAuthHeader()
+      const newCharacter = await apiPost<Character>('/api/characters', characterData, { headers })
       setCharacters(prev => [newCharacter, ...prev])
       return newCharacter
     } catch (e: any) {
@@ -51,12 +42,11 @@ export function useCharacters() {
     }
   }, [])
 
-  const updateCharacter = useCallback(async (id: string, characterData: Partial<Character>) => {
+  const updateCharacter = useCallback(async (id: string, characterData: Partial<CharacterFormData>) => {
     try {
       setError(null)
-      const updatedCharacter = await apiPut<Character>(`/api/characters/${id}`, characterData, {
-        headers: { 'x-user-id': USER_ID }
-      })
+      const headers = await getAuthHeader()
+      const updatedCharacter = await apiPut<Character>(`/api/characters/${id}`, characterData, { headers })
       setCharacters(prev => prev.map(c => c.id === id ? updatedCharacter : c))
       return updatedCharacter
     } catch (e: any) {
@@ -68,9 +58,8 @@ export function useCharacters() {
   const deleteCharacter = useCallback(async (id: string) => {
     try {
       setError(null)
-      await apiDelete(`/api/characters/${id}`, {
-        headers: { 'x-user-id': USER_ID }
-      })
+      const headers = await getAuthHeader()
+      await apiDelete(`/api/characters/${id}`, { headers })
       setCharacters(prev => prev.filter(c => c.id !== id))
     } catch (e: any) {
       setError(e?.message ?? 'Error deleting character')
