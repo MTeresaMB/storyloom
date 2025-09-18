@@ -4,58 +4,56 @@ const supabase = require('../config/supabase');
 
 router.get('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('objects')
-      .select(
-        '*',
-        'locations:location_id(id, name)'
-      )
+      .select('*', 'locations:location_id(id, name)')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
-    
-    if(error) throw error;
+
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error obtaining objects',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.get('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('objects')
-      .select(
-        '*',
-        'locations:location_id(id, name)'
-      )
+      .select('*', 'locations:location_id(id, name)')
       .eq('id', req.params.id)
       .eq('user_id', userId)
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Object not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Object not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error obtaining object',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.post('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
     const { name, description, type, importance, location_id } = req.body;
 
     const { data, error } = await supabase
@@ -66,28 +64,26 @@ router.post('/', async (req, res) => {
         description,
         type,
         importance,
-        location_id
+        location_id,
       })
-      .select(
-        '*',
-        'locations:location_id(id, name)'
-      )
+      .select('*', 'locations:location_id(id, name)')
       .single();
-    
-    if(error) throw error;
+
+    if (error) throw error;
     res.status(201).json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error creating object',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.put('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const update = req.body;
 
@@ -95,30 +91,29 @@ router.put('/:id', async (req, res) => {
 
     const { data, error } = await supabase
       .from('objects')
-      .update({...update, updated_at: new Date().toISOString()})
+      .update({ ...update, updated_at: new Date().toISOString() })
       .eq('id', req.params.id)
       .eq('user_id', userId)
-      .select(
-        '*',
-        'locations:location_id(id, name)'
-      )
+      .select('*', 'locations:location_id(id, name)')
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Object not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Object not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error updating object',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.delete('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('objects')
@@ -127,16 +122,17 @@ router.delete('/:id', async (req, res) => {
       .eq('user_id', userId)
       .select()
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Object not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Object not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error deleting object',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 module.exports = router;

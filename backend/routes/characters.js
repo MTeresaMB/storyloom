@@ -4,30 +4,41 @@ const supabase = require('../config/supabase');
 
 router.get('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('characters')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
-    
-    if(error) throw error;
+
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error obtaining characters',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.post('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
-    const { name, description, age, appearance, personality, background, goals, conflicts } = req.body;
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
+    const {
+      name,
+      description,
+      age,
+      appearance,
+      personality,
+      background,
+      goals,
+      conflicts,
+    } = req.body;
 
     const { data, error } = await supabase
       .from('characters')
@@ -40,25 +51,26 @@ router.post('/', async (req, res) => {
         personality,
         background,
         goals,
-        conflicts
+        conflicts,
       })
       .select()
       .single();
-    
-    if(error) throw error;
+
+    if (error) throw error;
     res.status(201).json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error creating character',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.get('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('characters')
@@ -66,48 +78,52 @@ router.get('/:id', async (req, res) => {
       .eq('user_id', userId)
       .eq('id', req.params.id)
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Character not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Character not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error obtaining character',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.put('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const update = req.body;
 
     const { data, error } = await supabase
       .from('characters')
-      .update({...update, updated_at: new Date().toISOString()})
+      .update({ ...update, updated_at: new Date().toISOString() })
       .eq('id', req.params.id)
       .eq('user_id', userId)
       .select()
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Character not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Character not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error updating character',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 router.delete('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if(!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('characters')
@@ -116,16 +132,17 @@ router.delete('/:id', async (req, res) => {
       .eq('user_id', userId)
       .select()
       .single();
-    
-    if(error?.code === 'PGRST116') return res.status(404).json({ error: 'Character not found' });
-    if(error) throw error;
+
+    if (error?.code === 'PGRST116')
+      return res.status(404).json({ error: 'Character not found' });
+    if (error) throw error;
     res.json(data);
   } catch (error) {
     res.status(500).json({
       message: 'Error deleting character',
-      error: error.message
-    })
+      error: error.message,
+    });
   }
-})
+});
 
 module.exports = router;

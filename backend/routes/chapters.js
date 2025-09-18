@@ -10,14 +10,20 @@ function countWords(text) {
 // GET /api/chapters
 router.get('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
-    const { data, error } = await supabase
-      .from('chapters')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+    let query = supabase.from('chapters').select('*').eq('user_id', userId);
+
+    // Filtrar por story_id si se proporciona
+    if (req.query.story_id) {
+      query = query.eq('story_id', req.query.story_id);
+    }
+
+    const { data, error } = await query.order('created_at', {
+      ascending: false,
+    });
 
     if (error) throw error;
     const mapped = (data || []).map((row) => ({
@@ -40,22 +46,30 @@ router.get('/', async (req, res) => {
 // POST /api/chapters
 router.post('/', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
-    const { title = 'Untitled', content = '' } = req.body || {};
+    const { title = 'Untitled', content = '', story_id } = req.body || {};
     const now = new Date().toISOString();
     const word_count = countWords(content);
 
+    const insertData = {
+      user_id: userId,
+      title,
+      content,
+      word_count,
+      last_modified: now,
+    };
+
+    // Solo agregar story_id si se proporciona
+    if (story_id) {
+      insertData.story_id = story_id;
+    }
+
     const { data, error } = await supabase
       .from('chapters')
-      .insert({
-        user_id: userId,
-        title,
-        content,
-        word_count,
-        last_modified: now,
-      })
+      .insert(insertData)
       .select('*')
       .single();
 
@@ -80,8 +94,9 @@ router.post('/', async (req, res) => {
 // PUT /api/chapters/:id
 router.put('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const patch = req.body || {};
     const update = { ...patch };
@@ -121,8 +136,9 @@ router.put('/:id', async (req, res) => {
 // DELETE /api/chapters/:id
 router.delete('/:id', async (req, res) => {
   try {
-    const userId = req.headers['x-user-id'];
-    if (!userId) return res.status(400).json({ error: 'User ID is required' });
+    const userId = req.user?.id;
+    if (!userId)
+      return res.status(400).json({ error: 'User ID not authenticated' });
 
     const { data, error } = await supabase
       .from('chapters')

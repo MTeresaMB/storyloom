@@ -15,6 +15,9 @@ const locationsRoutes = require('./routes/locations');
 const objectsRoutes = require('./routes/objects');
 const chaptersRoutes = require('./routes/chapters');
 
+const auth = require('./middleware/auth')
+app.use(auth)
+
 app.get('/', (req, res) => {
   res.json({
     message: 'StoryLoom API funcionando! ��',
