@@ -10,7 +10,7 @@ import { useChapters } from '../hooks/chapters/useChapters'
 
 export default function StoryView() {
   const { currentProject } = useApp()
-  const { chapters, loading, error, createChapter, updateChapter, removeChapter } = useChapters()
+  const { chapters, loading, error, createChapter, updateChapter, removeChapter } = useChapters(currentProject?.id)
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [rightOpen, setRightOpen] = useState(true)
