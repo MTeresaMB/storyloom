@@ -33,11 +33,11 @@ export default function Sidebar({ activeView, setActiveView }: Props) {
 
   const toggle = (key: SectionKey) => setExpanded(prev => ({ ...prev, [key]: !prev[key] }));
   return (
-    <aside className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-gray-900 text-gray-300 h-screen flex flex-col transition-all border-r border-gray-800`} aria-label="Sidebar">
+    <aside className={`${sidebarCollapsed ? 'w-16' : 'w-64'} bg-gray-900 text-gray-300 flex flex-col transition-all border-r border-gray-800`} aria-label="Sidebar">
       <div className="p-4 border-b border-gray-800 flex justify-between">
         {!sidebarCollapsed && <div className="text-white font-semibold">StoryLoom</div>}
         <Button
-          variant="ghost"
+          variant="secondary"
           size="sm"
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
         >
@@ -66,7 +66,7 @@ export default function Sidebar({ activeView, setActiveView }: Props) {
                     <button
                       key={item.id}
                       onClick={() => setActiveView(item.id)}
-                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 ${active ? 'bg-gray-800 text-white border-l-2 border-blue-400' : 'hover:bg-gray-800/50 hover:text-white'
+                      className={`w-full flex items-center gap-2 px-2 py-2 rounded-lg transition-all duration-200 ${active ? 'bg-gray-800 text-white border-l-2 border-blue-400' : 'hover:bg-gray-800/50 hover:text-white'
                         }`}
                       title={sidebarCollapsed ? item.label : undefined}
                       aria-current={active ? 'page' : undefined}
