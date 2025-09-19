@@ -1,7 +1,7 @@
 import { Edit3, Eye, Trash2, Check, X } from 'lucide-react'
 import Button from '../ui/Button'
 import type { Story } from '../../types/story'
-import { getProgressPercent, getStatusBadgeClasses, getTargetWords } from '../../utils/projects'
+import { getProgressPercent, getStatusBadgeClasses, getTargetWords } from '../../utils/projects/index'
 import { useEffect, useRef } from 'react'
 
 type Props = {

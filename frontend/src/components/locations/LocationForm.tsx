@@ -1,7 +1,7 @@
 import { Location, LocationFormData } from "../../types/location";
 import Button from "../ui/Button";
 import useLocationForm from "../../hooks/locations/useLocationForm";
-import { validateForm } from "../../utils/locationValidation";
+import { validateForm } from "../../utils/locations/validation";
 
 interface LocationFormProps {
   onLocationCreated: (location: LocationFormData) => Promise<void>;

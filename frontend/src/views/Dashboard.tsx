@@ -3,13 +3,11 @@ import { useEffect, useState } from "react";
 import { useApp } from "../context/AppContext";
 import Button from "../components/ui/Button";
 import PageHeader from "../components/ui/PageHeader";
-import { updateStoryTitle } from "../services/stories";
-import type { Story } from "../types/story";
 import ProjectCard from "../components/projects/ProjectCard";
 import CurrentProjectCard from "../components/projects/CurrentProjectCard";
 
 export default function Dashboard({ onOpenStory }: { onOpenStory?: () => void }) {
-  const { projects, currentProject, setCurrentProject, setProjects, createProject } = useApp();
+  const { projects, currentProject, setCurrentProject, createProject, updateProjectTitle } = useApp();
   const [creating, setCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tempTitle, setTempTitle] = useState<string>("");
@@ -42,9 +40,7 @@ export default function Dashboard({ onOpenStory }: { onOpenStory?: () => void })
   const commitEdit = async (id: string) => {
     const title = tempTitle.trim();
     if (!title) return cancelEdit();
-    const updated = await updateStoryTitle(id, title);
-    setProjects(projects.map((p: Story) => (p.id === id ? updated : p)));
-    if (currentProject?.id === id) setCurrentProject(updated);
+    await updateProjectTitle(id, title);
     cancelEdit();
   };
 

@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react'
 import { Chapter } from '../../types/chapter'
-import { formatDateTime } from '../../utils/dates'
+import { formatDateTime } from '../../utils/common/dates'
 
 type Props = {
   chapters: Chapter[]

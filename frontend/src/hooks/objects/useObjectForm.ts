@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { ObjectFormData } from '../../types/object'
-import { getInitialObjectFormData, mapObjectToFormData } from '../../utils/objectForm'
-import { validateField, validateForm } from '../../utils/objectValidation'
+import { getInitialObjectFormData, mapObjectToFormData } from '../../utils/objects/form'
+import { validateField, validateForm } from '../../utils/objects/validation'
 
 export default function useObjectForm(initialData?: Partial<ObjectFormData>) {
   const [formData, setFormData] = useState<ObjectFormData>(() =>

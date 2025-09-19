@@ -5,7 +5,7 @@ type Props = {
   onChange: (v: string) => void
 }
 
-export default function EditorPane({ isEditing, content, editContent, onChange }: Props) {
+export default function EditorPanel({ isEditing, content, editContent, onChange }: Props) {
   return (
     <div className="flex-1 bg-gray-900">
       {isEditing ? (

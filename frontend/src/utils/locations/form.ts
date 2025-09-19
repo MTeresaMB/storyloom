@@ -1,4 +1,4 @@
-import { LocationFormData } from '../types/location'
+import { LocationFormData } from "../../types/location"
 
 export function getInitialLocationFormData(): LocationFormData {
   return {

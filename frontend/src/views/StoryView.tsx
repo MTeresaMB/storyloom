@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import ChapterList from '../components/story/ChapterList'
 import EditorHeader from '../components/story/EditorHeader'
-import EditorPane from '../components/story/EditorPane'
+import EditorPanel from '../components/story/EditorPanel'
 import RightPanel from '../components/story/RightPanel'
 import { useApp } from '../context/AppContext'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
@@ -74,7 +74,7 @@ export default function StoryView() {
               onToggleRight={() => setRightOpen(v => !v)}
             />
             <div className="flex-1 flex">
-              <EditorPane
+              <EditorPanel
                 isEditing={isEditing}
                 content={selected.content}
                 editContent={editContent}

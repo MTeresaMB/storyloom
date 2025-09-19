@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Character, CharacterFormData } from "../../types/character";
-import { getInitialFormData, mapCharacterToFormData } from "../../utils/characterForm";
-import { CharacterValidationErrors, validateField, validateForm } from "../../utils/characterValidation";
+import { getInitialFormData, mapCharacterToFormData } from "../../utils/characters/form";
+import { CharacterValidationErrors, validateField, validateForm } from "../../utils/characters/validation";
 
 
 const useCharacterForm = (initialData?: Partial<Character>) => {

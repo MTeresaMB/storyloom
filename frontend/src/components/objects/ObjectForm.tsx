@@ -1,7 +1,7 @@
 import { Object, ObjectFormData } from "../../types/object";
 import Button from "../ui/Button";
 import useObjectForm from "../../hooks/objects/useObjectForm";
-import { validateForm } from "../../utils/objectValidation";
+import { validateForm } from "../../utils/objects/validation";
 import { useLocations } from "../../hooks/locations/useLocations";
 
 interface ObjectFormProps {

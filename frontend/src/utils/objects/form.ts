@@ -1,4 +1,4 @@
-import { ObjectFormData } from '../types/object'
+import { ObjectFormData } from "../../types/object"
 
 export function getInitialObjectFormData(): ObjectFormData {
   return {

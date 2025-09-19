@@ -1,5 +1,5 @@
 import type { Story } from '../../types/story'
-import { getProgressPercent, getTargetWords } from '../../utils/projects'
+import { getProgressPercent, getTargetWords } from '../../utils/projects/index'
 
 type Props = {
   project: Story

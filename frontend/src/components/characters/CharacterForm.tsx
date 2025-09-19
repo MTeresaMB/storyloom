@@ -1,7 +1,7 @@
 import { Character, CharacterFormData } from "../../types/character";
 import Button from "../ui/Button";
 import useCharacterForm from "../../hooks/characters/usecharacterForm";
-import { validateForm } from "../../utils/characterValidation";
+import { validateForm } from "../../utils/characters/validation";
 
 interface CharacterFormProps {
   onCharacterCreated: (character: CharacterFormData) => Promise<void>;

@@ -1,4 +1,4 @@
-import { ObjectFormData } from '../types/object'
+import { ObjectFormData } from "../../types/object"
 
 export const OBJECT_VALIDATION_RULES = {
   name: {

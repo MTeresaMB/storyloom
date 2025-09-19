@@ -1,4 +1,4 @@
-import { Character, CharacterFormData } from "../types/character";
+import { Character, CharacterFormData } from "../../types/character";
 
 export const getInitialFormData = (): CharacterFormData => ({
   name: '',

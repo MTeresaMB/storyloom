@@ -66,6 +66,21 @@ export const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
     return data
   }, [user, currentProject])
 
+  const updateProjectTitle = useCallback(async (id: string, title: string) => {
+    if (!user) throw new Error('No autenticado')
+    const { data, error } = await supabase
+      .from('stories')
+      .update({ title })
+      .eq('id', id)
+      .eq('user_id', user.id)
+      .select('*')
+      .single()
+    if (error || !data) throw error ?? new Error('No se pudo actualizar el título')
+    setProjects(prev => prev.map(p => p.id === id ? data : p))
+    if (currentProject?.id === id) setCurrentProject(data)
+    return data
+  }, [user, currentProject])
+
   const value = useMemo<AppContextValue>(() => ({
     user,
     setUser,
@@ -76,14 +91,16 @@ export const AppProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
     sidebarCollapsed,
     setSidebarCollapsed,
     refreshProjects,
-    createProject
+    createProject,
+    updateProjectTitle
   }), [
     user,
     projects,
     currentProject,
     sidebarCollapsed,
     refreshProjects,
-    createProject
+    createProject,
+    updateProjectTitle
   ])
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>

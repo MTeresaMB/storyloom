@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 import { LocationFormData } from '../../types/location'
-import { getInitialLocationFormData, mapLocationToFormData } from '../../utils/locationForm'
-import { validateField, validateForm } from '../../utils/locationValidation'
+import { getInitialLocationFormData, mapLocationToFormData } from '../../utils/locations/form'
+import { validateField, validateForm } from '../../utils/locations/validation'
 
 export default function useLocationForm(initialData?: Partial<LocationFormData>) {
   const [formData, setFormData] = useState<LocationFormData>(() =>

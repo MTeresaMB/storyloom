@@ -1,5 +1,5 @@
 import { Edit3, Save, Target, Clock, MoreHorizontal } from 'lucide-react'
-import { formatDateTime } from '../../utils/dates'
+import { formatDateTime } from '../../utils/common/dates'
 
 type Props = {
   title: string

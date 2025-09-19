@@ -13,6 +13,7 @@ export type AppContextValue = {
   setSidebarCollapsed: (v: boolean) => void
   refreshProjects: () => Promise<void>
   createProject: (title: string) => Promise<Story>
+  updateProjectTitle: (id: string, title: string) => Promise<Story>
 }
 
 export const AppContext = createContext<AppContextValue | undefined>(undefined)

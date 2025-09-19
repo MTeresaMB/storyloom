@@ -1,4 +1,4 @@
-import { CharacterFormData } from "../types/character";
+import { CharacterFormData } from "../../types/character";
 
 export type CharacterValidationErrors = Partial<Record<keyof CharacterFormData, string>>;
 

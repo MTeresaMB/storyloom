@@ -1,4 +1,4 @@
-import type { Story } from '../types/story'
+import type { Story } from "../../types/story"
 
 export function getTargetWords(project: Story): number {
   return project.target_words ?? 0
