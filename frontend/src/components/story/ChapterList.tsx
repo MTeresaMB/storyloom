@@ -1,17 +1,22 @@
 import { Plus } from 'lucide-react'
 import { Chapter } from '../../types/chapter'
+import { Story } from '../../types/story'
 import { formatDateTime } from '../../utils/common/dates'
 
 type Props = {
   chapters: Chapter[]
   selectedId: string
+  project?: Story
   onSelect: (id: string) => void
   onAdd?: () => void
 }
 
 export default function ChapterList({ chapters, selectedId, onSelect, onAdd }: Props) {
+  const totalWords = chapters.reduce((a, c) => a + c.wordCount, 0)
+
   return (
     <aside className="w-80 bg-gray-800 border-r border-gray-700 flex flex-col">
+      {/* Header de capítulos */}
       <div className="p-4 border-b border-gray-700">
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-white font-semibold">Chapters</h2>
@@ -20,7 +25,7 @@ export default function ChapterList({ chapters, selectedId, onSelect, onAdd }: P
           </button>
         </div>
         <div className="text-xs text-gray-400">
-          {chapters.length} chapters • {chapters.reduce((a, c) => a + c.wordCount, 0).toLocaleString()} words
+          {chapters.length} chapters • {totalWords.toLocaleString()} words
         </div>
       </div>
 
