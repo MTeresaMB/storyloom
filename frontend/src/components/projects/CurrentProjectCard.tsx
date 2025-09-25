@@ -1,52 +1,77 @@
-import type { Story } from '../../types/story'
-import { getProgressPercent, getTargetWords } from '../../utils/projects/index'
+import { Calendar } from 'lucide-react'
+import { computeProjectStatus, getStatusBadgeClasses, getTargetWords } from '../../utils/projects/index'
+import { CurrentProjectCardProps } from '../../types/projects'
 
-type Props = {
-  project: Story
-}
 
-export default function CurrentProjectCard({ project }: Props) {
-  const progress = getProgressPercent(project)
-  const target = getTargetWords(project)
+export default function CurrentProjectCard({ project, metrics }: CurrentProjectCardProps) {
+  const totalWords = metrics?.totalWords ?? 0
+  const chaptersCount = metrics?.chaptersCount ?? 0
+  const progressPercentage = Math.min(metrics?.progressPercentage ?? 0, 100)
+  const lastActivity = metrics?.lastActivity
+
+  const targetWords = getTargetWords(project);
+  const computedStatus = computeProjectStatus(totalWords, targetWords)
+  const remainingWords = targetWords > 0 ? Math.max(targetWords - totalWords, 0) : 0;
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
       <div className="flex justify-between items-start mb-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900 mb-1">Current Project</h2>
           <h3 className="text-2xl font-bold text-gray-900">{project.title}</h3>
-          <p className="text-gray-600 mt-2">{project.description}</p>
+          {project.description && (
+            <p className="text-gray-600 mt-2">{project.description}</p>
+          )}
+          {project.synopsis && (
+            <p className="text-gray-600 mt-2">{project.synopsis}</p>
+          )}
         </div>
-        <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
-          {project.status || 'draft'}
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStatusBadgeClasses(computedStatus)}`}>
+          {computedStatus}
         </span>
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mt-6">
-        <Metric label="Words Written" value={(0).toLocaleString()} className="text-blue-600" />
-        <Metric label="Progress" value={`${progress}%`} className="text-green-600" />
-        <Metric label="Target Words" value={target.toLocaleString()} className="text-purple-600" />
-        <Metric label="Status" value={project.status || 'draft'} className="text-orange-600" />
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+        <div className="text-center">
+          <div className="text-2xl font-bold text-blue-600">{totalWords.toLocaleString()}</div>
+          <div className="text-sm text-gray-500">Words Written</div>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-green-600">{progressPercentage}%</div>
+          <div className="text-sm text-gray-500">Progress</div>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-purple-600">{targetWords.toLocaleString()}</div>
+          <div className="text-sm text-gray-500">Target Words</div>
+        </div>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-orange-600">{chaptersCount}</div>
+          <div className="text-sm text-gray-500">Chapters</div>
+        </div>
       </div>
 
-      <div className="mt-4">
+      <div className="mt-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
           <span>Progress</span>
-          <span>{progress}%</span>
+          <span>{progressPercentage}%</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div className="bg-blue-600 h-2 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+        <div className="w-full bg-gray-200 rounded-full h-3">
+          <div
+            className="bg-blue-600 h-3 rounded-full transition-all duration-500"
+            style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+          />
+        </div>
+        <div className="flex justify-between text-xs text-gray-400 mt-2">
+          <span>{totalWords.toLocaleString()} / {targetWords.toLocaleString()}</span>
+          <span>{remainingWords > 0 ? `${remainingWords.toLocaleString()} remaining` : 'Goal achieved!'}</span>
         </div>
       </div>
-    </div>
-  )
-}
 
-function Metric({ label, value, className }: { label: string; value: string | number; className?: string }) {
-  return (
-    <div className="text-center">
-      <div className={`text-2xl font-bold ${className || ''}`}>{value}</div>
-      <div className="text-sm text-gray-500">{label}</div>
+      {lastActivity && (
+        <div className="flex items-center gap-2 text-sm text-gray-500 mt-4">
+          <Calendar className="h-4 w-4" />
+          <span>Last activity: {new Date(lastActivity).toLocaleDateString()}</span>
+        </div>
+      )}
     </div>
   )
 }
