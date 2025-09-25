@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react'
 import ChapterList from '../components/story/ChapterList'
 import EditorHeader from '../components/story/EditorHeader'
 import EditorPanel from '../components/story/EditorPanel'
@@ -7,42 +6,36 @@ import { useApp } from '../context/AppContext'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 import ErrorAlert from '../components/ui/ErrorAlert'
 import { useChapters } from '../hooks/chapters/useChapters'
+import { useEditorShortcuts } from '../hooks/editor/useKeyboardShortcuts'
+import { useStoryEditor } from '../hooks/story/useStoryEditor'
 
 export default function StoryView() {
   const { currentProject } = useApp()
-  const { chapters, loading, error, createChapter, updateChapter, removeChapter } = useChapters(currentProject?.id)
+  const { chapters, loading, error, createChapter, updateChapter } = useChapters(currentProject?.id)
 
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [rightOpen, setRightOpen] = useState(true)
-  const [isEditing, setIsEditing] = useState(false)
-  const [editContent, setEditContent] = useState('')
+  const {
+    setSelectedId,
+    selected,
+    rightOpen,
+    isEditing,
+    editContent,
+    setEditContent,
+    currentWordCount,
+    setCurrentWordCount,
+    saveStatus,
+    setSaveStatus,
+    onAddChapter,
+    startEditing,
+    saveChapter,
+    handleSaveContent,
+    toggleEdit,
+    toggleRightPanel
+  } = useStoryEditor({ chapters, createChapter, updateChapter })
 
-  const selected = useMemo(() => {
-    if (!chapters.length) return null
-    const id = selectedId ?? chapters[0]?.id
-    return chapters.find(c => c.id === id) ?? null
-  }, [chapters, selectedId])
-
-  const totalWords = useMemo(() => chapters.reduce((a, c) => a + (c.wordCount || 0), 0), [chapters])
-
-  const onAddChapter = async () => {
-    const ch = await createChapter(`Chapter ${chapters.length + 1}`)
-    setSelectedId(ch.id)
-    setIsEditing(true)
-    setEditContent('')
-  }
-
-  const startEditing = () => {
-    if (!selected) return
-    setIsEditing(true)
-    setEditContent(selected.content)
-  }
-
-  const saveChapter = async () => {
-    if (!selected) return
-    await updateChapter(selected.id, { content: editContent })
-    setIsEditing(false)
-  }
+  useEditorShortcuts({
+    onSave: saveChapter,
+    onToggleEdit: toggleEdit
+  })
 
   if (!currentProject) {
     return (
@@ -58,6 +51,7 @@ export default function StoryView() {
       <ChapterList
         chapters={chapters}
         selectedId={selected?.id ?? ''}
+        project={currentProject}
         onSelect={(id) => setSelectedId(id)}
         onAdd={onAddChapter}
       />
@@ -66,12 +60,14 @@ export default function StoryView() {
           <>
             <EditorHeader
               title={selected.title}
-              wordCount={selected.wordCount}
+              wordCount={isEditing ? currentWordCount : selected.wordCount}
               lastModified={selected.lastModified}
               isEditing={isEditing}
+              saveStatus={saveStatus}
+              project={currentProject}
               onStartEdit={startEditing}
               onSave={saveChapter}
-              onToggleRight={() => setRightOpen(v => !v)}
+              onToggleRight={toggleRightPanel}
             />
             <div className="flex-1 flex">
               <EditorPanel
@@ -79,6 +75,9 @@ export default function StoryView() {
                 content={selected.content}
                 editContent={editContent}
                 onChange={setEditContent}
+                onSave={handleSaveContent}
+                onWordCountChange={setCurrentWordCount}
+                onSaveStatusChange={setSaveStatus}
               />
               {rightOpen && <RightPanel />}
             </div>
