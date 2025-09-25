@@ -5,7 +5,9 @@ Esta carpeta contiene toda la documentación técnica de StoryLoom, organizada p
 ## 📚 Documentación Disponible
 
 ### [API.md](./API.md)
+
 Documentación completa de la API REST, incluyendo:
+
 - Endpoints disponibles
 - Parámetros de entrada y salida
 - Códigos de error
@@ -13,7 +15,9 @@ Documentación completa de la API REST, incluyendo:
 - Límites de rate limiting
 
 ### [ARCHITECTURE.md](./ARCHITECTURE.md)
+
 Arquitectura del sistema y patrones de diseño:
+
 - Arquitectura de alto nivel
 - Patrones de componentes
 - Flujo de datos
@@ -21,7 +25,9 @@ Arquitectura del sistema y patrones de diseño:
 - Optimizaciones de rendimiento
 
 ### [DATABASE.md](./DATABASE.md)
+
 Documentación de la base de datos:
+
 - Esquemas de tablas
 - Relaciones entre entidades
 - Políticas de Row Level Security (RLS)
@@ -29,7 +35,9 @@ Documentación de la base de datos:
 - Funciones y triggers
 
 ### [COMPONENTS.md](./COMPONENTS.md)
+
 Documentación de componentes React:
+
 - Componentes base (UI)
 - Componentes de proyectos
 - Componentes de historia
@@ -38,7 +46,9 @@ Documentación de componentes React:
 - Guías de estilo
 
 ### [HOOKS.md](./HOOKS.md)
+
 Documentación de hooks personalizados:
+
 - Hooks del editor
 - Hooks del dashboard
 - Hooks de capítulos
@@ -47,7 +57,9 @@ Documentación de hooks personalizados:
 - Optimización de rendimiento
 
 ### [DEPLOYMENT.md](./DEPLOYMENT.md)
+
 Guía de despliegue y producción:
+
 - Configuración de entornos
 - Despliegue en Vercel y Railway
 - Configuración de base de datos
@@ -57,17 +69,20 @@ Guía de despliegue y producción:
 ## 🚀 Inicio Rápido
 
 ### Para Desarrolladores
+
 1. Lee [ARCHITECTURE.md](./ARCHITECTURE.md) para entender la arquitectura
 2. Consulta [COMPONENTS.md](./COMPONENTS.md) para componentes React
 3. Revisa [HOOKS.md](./HOOKS.md) para hooks personalizados
 4. Usa [API.md](./API.md) para integración con la API
 
 ### Para DevOps
+
 1. Lee [DEPLOYMENT.md](./DEPLOYMENT.md) para configuración de producción
 2. Consulta [DATABASE.md](./DATABASE.md) para configuración de base de datos
 3. Revisa [ARCHITECTURE.md](./ARCHITECTURE.md) para consideraciones de escalabilidad
 
 ### Para QA/Testing
+
 1. Usa [API.md](./API.md) para pruebas de endpoints
 2. Consulta [COMPONENTS.md](./COMPONENTS.md) para pruebas de componentes
 3. Revisa [HOOKS.md](./HOOKS.md) para pruebas de hooks
@@ -75,18 +90,21 @@ Guía de despliegue y producción:
 ## 📖 Convenciones de Documentación
 
 ### Estructura de Archivos
+
 - Cada archivo cubre un área específica
 - Incluye ejemplos de código
 - Proporciona casos de uso
 - Mantiene consistencia en formato
 
 ### Ejemplos de Código
+
 - Todos los ejemplos son funcionales
 - Incluyen imports necesarios
 - Siguen las mejores prácticas
 - Están actualizados con la versión actual
 
 ### Mantenimiento
+
 - La documentación se actualiza con cada release
 - Los ejemplos se prueban regularmente
 - Se mantiene consistencia con el código fuente
@@ -95,6 +113,7 @@ Guía de despliegue y producción:
 ## 🔧 Herramientas de Desarrollo
 
 ### Generación de Documentación
+
 ```bash
 # Generar documentación de API
 npm run docs:api
