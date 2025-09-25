@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { apiGet, apiPost, apiPut, apiDelete } from '../../api/client'
 import { Chapter } from '../../types/chapter'
-import { getAuthHeader } from '../../api/token'
-
+import {
+  fetchChapters,
+  createChapter,
+  updateChapter,
+  deleteChapter,
+  validateChapterParams
+} from '../../utils/chapters/apiHelpers'
 
 export function useChapters(storyId?: string) {
   const [chapters, setChapters] = useState<Chapter[]>([])
@@ -10,48 +14,86 @@ export function useChapters(storyId?: string) {
   const [error, setError] = useState<string | null>(null)
   const didFetch = useRef(false)
 
-  const fetchChapters = useCallback(async () => {
+  const fetchChaptersData = useCallback(async () => {
     try {
       setError(null)
-      const headers = await getAuthHeader();
-      const url = storyId ? `/api/chapters?story_id=${storyId}` : '/api/chapters';
-      const data = await apiGet<Chapter[]>(url, { headers });
-      setChapters(data);
-    } catch (e: any) {
-      setError(e?.message ?? 'Error');
+      setLoading(true)
+      const data = await fetchChapters(storyId)
+      setChapters(data)
+    } catch (err: any) {
+      console.error('Error in fetchChaptersData:', err)
+      setError(err?.message ?? 'Error fetching chapters')
+      setChapters([])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }, [storyId])
 
   useEffect(() => {
     if (didFetch.current) return
     didFetch.current = true
-    fetchChapters()
-  }, [fetchChapters])
+    fetchChaptersData()
+  }, [fetchChaptersData])
 
-  const createChapter = useCallback(async (title: string) => {
-    const headers = await getAuthHeader();
-    const body = storyId ? { title, story_id: storyId } : { title };
-    const created = await apiPost<Chapter>(`/api/chapters`, body, { headers })
-    setChapters(prev => [created, ...prev])
-    return created
+  const createChapterHandler = useCallback(async (title: string) => {
+    try {
+      if (!validateChapterParams({ title, story_id: storyId })) {
+        throw new Error('Invalid chapter parameters')
+      }
+
+      const created = await createChapter(title, storyId)
+      setChapters(prev => [created, ...prev])
+      return created
+    } catch (err: any) {
+      console.error('Error creating chapter:', err)
+      setError(err?.message ?? 'Error creating chapter')
+      throw err
+    }
   }, [storyId])
 
-  const updateChapter = useCallback(async (id: string, patch: Partial<Pick<Chapter, 'title' | 'content'>>) => {
-    const headers = await getAuthHeader();
-    const updated = await apiPut<Chapter>(`/api/chapters/${id}`, patch, { headers })
-    setChapters(prev => prev.map(c => (c.id === id ? updated : c)))
-    return updated
+  const updateChapterHandler = useCallback(async (
+    id: string,
+    patch: Partial<Pick<Chapter, 'title' | 'content'>>
+  ) => {
+    try {
+      if (!validateChapterParams(patch)) {
+        throw new Error('Invalid update parameters')
+      }
+
+      const updated = await updateChapter(id, patch)
+      setChapters(prev => prev.map(c => (c.id === id ? updated : c)))
+      return updated
+    } catch (err: any) {
+      console.error('Error updating chapter:', err)
+      setError(err?.message ?? 'Error updating chapter')
+      throw err
+    }
   }, [])
 
-  const removeChapter = useCallback(async (id: string) => {
-    const headers = await getAuthHeader();
-    await apiDelete<{ success: true; id: string }>(`/api/chapters/${id}`, { headers })
-    setChapters(prev => prev.filter(c => c.id !== id))
+  const removeChapterHandler = useCallback(async (id: string) => {
+    try {
+      if (!id || typeof id !== 'string') {
+        throw new Error('Invalid chapter ID')
+      }
+
+      await deleteChapter(id)
+      setChapters(prev => prev.filter(c => c.id !== id))
+    } catch (err: any) {
+      console.error('Error removing chapter:', err)
+      setError(err?.message ?? 'Error removing chapter')
+      throw err
+    }
   }, [])
 
-  return { chapters, loading, error, fetchChapters, createChapter, updateChapter, removeChapter }
+  return {
+    chapters,
+    loading,
+    error,
+    fetchChapters: fetchChaptersData,
+    createChapter: createChapterHandler,
+    updateChapter: updateChapterHandler,
+    removeChapter: removeChapterHandler
+  }
 }
 
 

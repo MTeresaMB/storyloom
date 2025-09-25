@@ -1,26 +1,22 @@
-import type { Story } from "../../types/story"
+import { Story } from "../../types/story"
 
-export function getTargetWords(project: Story): number {
-  return project.target_words ?? 0
-}
+export type ProjectStatus = 'draft' | 'in_progress' | 'completed'
 
-export function getWrittenWords(_project: Story): number {
-  // Placeholder hasta que tengamos métrica real de palabras escritas
-  return 0
-}
-
-export function getProgressPercent(project: Story): number {
-  const target = getTargetWords(project)
-  const written = getWrittenWords(project)
-  if (target <= 0) return 0
-  return Math.round((written / target) * 100)
+export function computeProjectStatus(totalWords: number, targetWords?: number | null): ProjectStatus {
+  const target = typeof targetWords === 'number' ? targetWords : 0
+  if (totalWords <= 0) return 'draft'
+  if (target > 0 && totalWords >= target) return 'completed'
+  return 'in_progress'
 }
 
 export function getStatusBadgeClasses(status?: string): string {
   const s = (status || 'draft').toLowerCase()
-  if (s === 'writing') return 'bg-green-100 text-green-800'
-  if (s === 'planning') return 'bg-yellow-100 text-yellow-800'
+  if (s === 'in_progress') return 'bg-green-100 text-green-800'
+  if (s === 'draft') return 'bg-gray-100 text-gray-800'
   if (s === 'completed') return 'bg-blue-100 text-blue-800'
   return 'bg-gray-100 text-gray-800'
 }
 
+export function getTargetWords(project: Story): number {
+  return project.target_words ?? 0
+}
