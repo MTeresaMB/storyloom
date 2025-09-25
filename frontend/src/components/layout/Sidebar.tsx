@@ -1,14 +1,14 @@
-import { Home, Users, MapPin, Package, BookOpen, Menu, Settings, Download, ChevronRight, ChevronDown, StickyNote, List } from 'lucide-react';
+import { Home, Users, MapPin, Package, BookOpen, Menu, Settings, Download, ChevronRight, ChevronDown, StickyNote, List, BarChart3 } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useState } from 'react';
 import Button from '../ui/Button';
 
-type SectionKey = 'project' | 'writing';
+type SectionKey = 'project' | 'writing' | 'analytics';
 
 type Props = { activeView: string; setActiveView: (v: string) => void };
 export default function Sidebar({ activeView, setActiveView }: Props) {
   const { sidebarCollapsed, setSidebarCollapsed } = useApp();
-  const [expanded, setExpanded] = useState<Record<SectionKey, boolean>>({ project: false, writing: false });
+  const [expanded, setExpanded] = useState<Record<SectionKey, boolean>>({ project: false, writing: false, analytics: false });
   const sections: Array<{ key: SectionKey; title: string; items: Array<{ id: string; label: string; icon: any }> }> = [
     {
       key: 'project',
@@ -28,7 +28,14 @@ export default function Sidebar({ activeView, setActiveView }: Props) {
         { id: 'notes', label: 'Notes', icon: StickyNote },
         { id: 'outline', label: 'Outline', icon: List },
       ]
-    }
+    },
+    {
+      key: 'analytics',
+      title: 'Analytics',
+      items: [
+        { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+      ]
+    },
   ];
 
   const toggle = (key: SectionKey) => setExpanded(prev => ({ ...prev, [key]: !prev[key] }));

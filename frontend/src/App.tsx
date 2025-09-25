@@ -6,6 +6,7 @@ import Dashboard from './views/Dashboard';
 import PlacesView from './views/PlacesView';
 import ObjectsView from './views/ObjectsView';
 import { AppProvider } from './providers/AppProvider';
+import AnalyticsView from './views/AnalyticsView';
 
 function Views({ activeView, onOpenStory }: { activeView: string; onOpenStory: () => void }) {
   switch (activeView) {
@@ -14,6 +15,7 @@ function Views({ activeView, onOpenStory }: { activeView: string; onOpenStory: (
     case 'characters': return <CharactersView />;
     case 'places': return <PlacesView />;
     case 'objects': return <ObjectsView />;
+    case 'analytics': return <AnalyticsView />;
     default: return <StoryView />;
   }
 }

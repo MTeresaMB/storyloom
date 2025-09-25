@@ -16,7 +16,6 @@ export default function useLocationForm(initialData?: Partial<LocationFormData>)
   const updateField = useCallback((field: keyof LocationFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }))
     }
@@ -25,7 +24,6 @@ export default function useLocationForm(initialData?: Partial<LocationFormData>)
   const touchField = useCallback((field: keyof LocationFormData) => {
     setTouched(prev => ({ ...prev, [field]: true }))
 
-    // Validate field when touched
     const error = validateField(field, formData[field])
     setErrors(prev => ({ ...prev, [field]: error }))
   }, [formData])

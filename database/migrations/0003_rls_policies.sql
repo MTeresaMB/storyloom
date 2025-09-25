@@ -1,11 +1,9 @@
--- Activar RLS
 alter table public.characters enable row level security;
 alter table public.locations enable row level security;
 alter table public.objects enable row level security;
 alter table public.stories enable row level security;
 alter table public.chapters enable row level security;
 
--- Eliminar políticas previas si existen
 do $$ begin
   execute 'drop policy if exists "select own characters" on public.characters';
   execute 'drop policy if exists "insert own characters" on public.characters';
@@ -33,7 +31,6 @@ do $$ begin
   execute 'drop policy if exists "delete own chapters" on public.chapters';
 end $$;
 
--- Políticas por tabla
 
 -- characters
 create policy "select own characters" on public.characters for select using (user_id = auth.uid());

@@ -1,12 +1,9 @@
--- Reemplaza por tu UUID real de Supabase antes de ejecutar
--- select auth.uid(); -- cuando estés autenticado
 \set user_uuid 'dac6f4fa-6baf-4966-8d3c-597c1f3afa5e'
 
 insert into public.stories (user_id, title, description, genre, target_words)
 values ('dac6f4fa-6baf-4966-8d3c-597c1f3afa5e', 'Sample Story', 'Demo project', 'Fantasy', 80000)
 on conflict do nothing;
 
--- Obtén el ID de la historia recién creada
 with s as (
   select id from public.stories where user_id = 'dac6f4fa-6baf-4966-8d3c-597c1f3afa5e' order by created_at desc limit 1
 )

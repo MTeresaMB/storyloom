@@ -16,7 +16,6 @@ export default function useObjectForm(initialData?: Partial<ObjectFormData>) {
   const updateField = useCallback((field: keyof ObjectFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
 
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }))
     }
@@ -25,7 +24,6 @@ export default function useObjectForm(initialData?: Partial<ObjectFormData>) {
   const touchField = useCallback((field: keyof ObjectFormData) => {
     setTouched(prev => ({ ...prev, [field]: true }))
 
-    // Validate field when touched
     const error = validateField(field, formData[field])
     setErrors(prev => ({ ...prev, [field]: error }))
   }, [formData])
